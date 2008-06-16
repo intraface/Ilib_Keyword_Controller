@@ -8,14 +8,14 @@ class Intraface_Keyword_Controller_Connect extends k_Controller
         $translation = $kernel->getTranslation('keyword');
 
         if (!empty($this->GET['filemanager_id']) AND is_numeric($this->GET['filemanager_id'])) {
-            $object_name = 'FileManager';
+            $object_name = 'Ilib_Filehandler_Manager';
             $module = $kernel->module('filemanager');
             $id = (int)$_REQUEST['filemanager_id'];
             $id_name = 'filemanager_id';
             $redirect = 'filemanager/file';
             $object = new $object_name($kernel, $id);
         } else {
-            trigger_error('Der er ikke angivet noget objekt i /keyword/connect.php', E_USER_ERROR);
+            throw new Exception('Der er ikke angivet noget objekt i /keyword/connect.php');
         }
 
         $options = array('extra_db_condition' => 'intranet_id = '.intval($kernel->intranet->get('id')));
@@ -51,16 +51,15 @@ class Intraface_Keyword_Controller_Connect extends k_Controller
         $translation = $kernel->getTranslation('keyword');
 
         if (!empty($this->POST['filemanager_id']) AND is_numeric($this->POST['filemanager_id'])) {
-            $object_name = 'FileManager';
+            $object_name = 'Ilib_Filehandler_Manager';
             $module = $kernel->module('filemanager');
             $id = (int)$_REQUEST['filemanager_id'];
             $id_name = 'filemanager_id';
             $redirect = 'filemanager/file';
             $object = new $object_name($kernel, $id);
         } else {
-            trigger_error('Der er ikke angivet noget objekt i /keyword/connect.php', E_USER_ERROR);
+            throw new Exception('Der er ikke angivet noget objekt i /keyword/connect.php');
         }
-
 
         $keyword = $object->getKeywordAppender(); // starter keyword objektet
 
