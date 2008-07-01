@@ -23,7 +23,7 @@ class Intraface_Keyword_Controller_Connect extends k_Controller
         $redirect->setDestination($this->url('../edit'), $this->url('../connect', array($id_name => $object->get('id'))));
 
         if (!empty($this->GET['delete']) AND is_numeric($this->GET['delete'])) {
-            $keyword = new Keyword($object, $this->GET['delete']);
+            $keyword = new Ilib_Keyword($object, $this->GET['delete']);
             $keyword->delete();
         }
 
@@ -69,14 +69,14 @@ class Intraface_Keyword_Controller_Connect extends k_Controller
 
         // strengen med keywords
         if (!empty($this->POST['keywords'])) {
-            $appender = new Intraface_Keyword_StringAppender(new Keyword($object), $keyword);
+            $appender = new Ilib_Keyword_StringAppender(new Keyword($object), $keyword);
             $appender->addKeywordsByString($this->POST['keywords']);
         }
 
         // listen med keywords
         if (!empty($this->POST['keyword']) AND is_array($this->POST['keyword']) AND count($this->POST['keyword']) > 0) {
             for($i=0, $max = count($this->POST['keyword']); $i < $max; $i++) {
-                $keyword->addKeyword(new Keyword($object, $this->POST['keyword'][$i]));
+                $keyword->addKeyword(new Ilib_Keyword($object, $this->POST['keyword'][$i]));
             }
         }
 
