@@ -69,7 +69,7 @@ class Intraface_Keyword_Controller_Connect extends k_Controller
 
         // strengen med keywords
         if (!empty($this->POST['keywords'])) {
-            $appender = new Ilib_Keyword_StringAppender(new Keyword($object), $keyword);
+            $appender = new Ilib_Keyword_StringAppender(new Ilib_Keyword($object), $keyword);
             $appender->addKeywordsByString($this->POST['keywords']);
         }
 
