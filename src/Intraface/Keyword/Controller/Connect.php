@@ -27,13 +27,14 @@ class Intraface_Keyword_Controller_Connect extends k_Controller
             $keyword->delete();
         }
 
-        $keyword = $object->getKeywordAppender(); // starter objektet
+        $keyword = $object->getKeywords();
+        $appender = $object->getKeywordAppender(); // starter objektet
         $keywords = $keyword->getAllKeywords(); // henter alle keywords
-        $keyword_string = $keyword->getConnectedKeywordsAsString();
+        $keyword_string = $appender->getConnectedKeywordsAsString();
 
         // finder dem der er valgt
         $checked = array();
-        foreach($keyword->getConnectedKeywords() AS $key) {
+        foreach($appender->getConnectedKeywords() as $key) {
             $checked[] = $key['id'];
         }
 
