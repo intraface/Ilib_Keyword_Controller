@@ -1,26 +1,25 @@
 <?php
 class Intraface_Keyword_Controller_Connect extends k_Controller
 {
+    public function getObject()
+    {
+        if (!method_exists($this->context, 'getObject')) {
+        	throw new Exception('The context has to implement getObject()');
+        }
+    	return $this->context->getObject();
+    }
+
     function GET()
     {
         $kernel = $this->registry->get('intraface:kernel');
         $kernel->useShared('keyword');
         $translation = $kernel->getTranslation('keyword');
 
-        if (!empty($this->GET['filemanager_id']) AND is_numeric($this->GET['filemanager_id'])) {
-            $object_name = 'Ilib_Filehandler_Manager';
-            $module = $kernel->module('filemanager');
-            $id = (int)$_REQUEST['filemanager_id'];
-            $id_name = 'filemanager_id';
-            $redirect = 'filemanager/file';
-            $object = new $object_name($kernel, $id);
-        } else {
-            throw new Exception('Der er ikke angivet noget objekt i /keyword/connect.php');
-        }
+        $object = $this->getObject();
 
         $options = array('extra_db_condition' => 'intranet_id = '.intval($kernel->intranet->get('id')));
         $redirect = Ilib_Redirect::receive($kernel->getSessionId(), $this->registry->get('database:mdb2'), $options);
-        $redirect->setDestination($this->url('../edit'), $this->url('../connect', array($id_name => $object->get('id'))));
+        $redirect->setDestination($this->url('../edit'), $this->url('../connect'));
 
         if (!empty($this->GET['delete']) AND is_numeric($this->GET['delete'])) {
             $keyword = new Ilib_Keyword($object, $this->GET['delete']);
@@ -40,7 +39,7 @@ class Intraface_Keyword_Controller_Connect extends k_Controller
 
         $this->document->title = $this->__('add keywords to') . ' ' . $object->get('name');
 
-        $data = array('object' => $object, 'keyword' => $keyword, 'keywords' => $keywords, 'id_name' => $id_name, 'checked' => $checked);
+        $data = array('object' => $object, 'keyword' => $keyword, 'keywords' => $keywords, 'checked' => $checked);
 
         return $this->render(dirname(__FILE__) . '/../templates/connect.tpl.php', $data);
     }
@@ -51,16 +50,7 @@ class Intraface_Keyword_Controller_Connect extends k_Controller
         $kernel->useShared('keyword');
         $translation = $kernel->getTranslation('keyword');
 
-        if (!empty($this->POST['filemanager_id']) AND is_numeric($this->POST['filemanager_id'])) {
-            $object_name = 'Ilib_Filehandler_Manager';
-            $module = $kernel->module('filemanager');
-            $id = (int)$_REQUEST['filemanager_id'];
-            $id_name = 'filemanager_id';
-            $redirect = 'filemanager/file';
-            $object = new $object_name($kernel, $id);
-        } else {
-            throw new Exception('Der er ikke angivet noget objekt i /keyword/connect.php');
-        }
+        $object = $this->getObject();
 
         $keyword = $object->getKeywordAppender(); // starter keyword objektet
 
@@ -82,9 +72,9 @@ class Intraface_Keyword_Controller_Connect extends k_Controller
         }
 
         if (!empty($this->POST['close'])) {
-            throw new k_http_Redirect($this->url('/filemanager/'. $id));
+            throw new k_http_Redirect($this->url('../../'));
         } else {
-            throw new k_http_Redirect($this->url(null, array('filemanager_id' => $id)));
+            throw new k_http_Redirect($this->url('./'));
         }
 
     }

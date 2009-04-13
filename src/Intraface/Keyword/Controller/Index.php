@@ -20,4 +20,9 @@ class Intraface_Keyword_Controller_Index extends k_Controller
         }
         parent::forward($name);
     }
+
+    function getObject()
+    {
+    	return $this->context->getObject();
+    }
 }
