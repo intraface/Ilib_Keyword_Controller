@@ -26,7 +26,7 @@ class Intraface_Keyword_Controller_Connect extends k_Controller
             $keyword->delete();
         }
 
-        $keyword = $object->getKeywords();
+        $keyword = $object->getKeyword();
         $appender = $object->getKeywordAppender(); // starter objektet
         $keywords = $keyword->getAllKeywords(); // henter alle keywords
         $keyword_string = $appender->getConnectedKeywordsAsString();
