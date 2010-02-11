@@ -1,5 +1,5 @@
 <?php
-class Intraface_Keyword_Controller_Connect extends k_Controller
+class Intraface_Keyword_Controller_Connect extends k_Component
 {
     public function getObject()
     {
@@ -9,17 +9,23 @@ class Intraface_Keyword_Controller_Connect extends k_Controller
     	return $this->context->getObject();
     }
 
-    function GET()
+    function t($phrase)
     {
-        $kernel = $this->registry->get('intraface:kernel');
+        return $phrase;
+    }
+
+    function __($phrase)
+    {
+        return $phrase;
+    }
+
+    function renderHtml()
+    {
+        $kernel = $this->context->getKernel();
         $kernel->useShared('keyword');
         $translation = $kernel->getTranslation('keyword');
 
         $object = $this->getObject();
-
-        $options = array('extra_db_condition' => 'intranet_id = '.intval($kernel->intranet->get('id')));
-        $redirect = Ilib_Redirect::receive($kernel->getSessionId(), $this->registry->get('database:mdb2'), $options);
-        $redirect->setDestination($this->url('../edit'), $this->url('../connect'));
 
         if (!empty($this->GET['delete']) AND is_numeric($this->GET['delete'])) {
             $keyword = new Ilib_Keyword($object, $this->GET['delete']);
@@ -37,16 +43,14 @@ class Intraface_Keyword_Controller_Connect extends k_Controller
             $checked[] = $key['id'];
         }
 
-        $this->document->title = $this->__('add keywords to') . ' ' . $object->get('name');
-
         $data = array('object' => $object, 'keyword' => $keyword, 'keywords' => $keywords, 'checked' => $checked);
-
-        return $this->render(dirname(__FILE__) . '/../templates/connect.tpl.php', $data);
+        $smarty = new k_Template(dirname(__FILE__) . '/../templates/connect.tpl.php');
+        return $smarty->render($this, $data);
     }
 
     function POST()
     {
-        $kernel = $this->registry->get('intraface:kernel');
+        $kernel = $this->context->getKernel();
         $kernel->useShared('keyword');
         $translation = $kernel->getTranslation('keyword');
 
@@ -59,23 +63,23 @@ class Intraface_Keyword_Controller_Connect extends k_Controller
         }
 
         // strengen med keywords
-        if (!empty($this->POST['keywords'])) {
-            $appender = new Ilib_Keyword_StringAppender(new Ilib_Keyword($object), $keyword);
-            $appender->addKeywordsByString($this->POST['keywords']);
+        if (!empty($_POST['keywords'])) {
+            $appender = new Intraface_Keyword_StringAppender(new Keyword($object), $keyword);
+            $appender->addKeywordsByString($_POST['keywords']);
         }
 
         // listen med keywords
-        if (!empty($this->POST['keyword']) AND is_array($this->POST['keyword']) AND count($this->POST['keyword']) > 0) {
-            for($i=0, $max = count($this->POST['keyword']); $i < $max; $i++) {
-                $keyword->addKeyword(new Ilib_Keyword($object, $this->POST['keyword'][$i]));
+        if (!empty($_POST['keyword']) AND is_array($_POST['keyword']) AND count($_POST['keyword']) > 0) {
+            for ($i=0, $max = count($_POST['keyword']); $i < $max; $i++) {
+                $keyword->addKeyword(new Keyword($object, $_POST['keyword'][$i]));
             }
         }
 
-        if (!empty($this->POST['close'])) {
-            throw new k_http_Redirect($this->url('../../'));
+        if (!empty($_POST['close'])) {
+            return new k_SeeOther($this->url('../../'));
         } else {
-            throw new k_http_Redirect($this->url('./'));
+            return new k_SeeOther($this->url('./'));
         }
-
+        return $this->render();
     }
 }

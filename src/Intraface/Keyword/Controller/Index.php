@@ -1,28 +1,26 @@
 <?php
-class Intraface_Keyword_Controller_Index extends k_Controller
+class Intraface_Keyword_Controller_Index extends k_Component
 {
     public $map = array('connect' => 'Intraface_Keyword_Controller_Connect',
                         'edit'    => 'Intraface_Keyword_Controller_Edit');
 
-    function GET()
+    function map($name)
     {
-        return get_class($this) . ': intentionally left blank';
+        return $this->map[$name];
     }
 
-    function forward($name)
+    function renderHtml()
     {
-        if ($name == 'connect') {
-            $next = new Intraface_Keyword_Controller_Connect($this, $name);
-            return $next->handleRequest();
-        } elseif ($name == 'edit') {
-            $next = new Intraface_Keyword_Controller_Edit($this, $name);
-            return $next->handleRequest();
-        }
-        parent::forward($name);
+        return get_class($this) . ': intentionally left blank';
     }
 
     function getObject()
     {
     	return $this->context->getObject();
+    }
+
+    function getKernel()
+    {
+        return $this->context->getKernel();
     }
 }

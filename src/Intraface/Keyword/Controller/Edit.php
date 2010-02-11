@@ -1,5 +1,5 @@
 <?php
-class Intraface_Keyword_Controller_Edit extends k_Controller
+class Intraface_Keyword_Controller_Edit extends k_Component
 {
     function GET()
     {
