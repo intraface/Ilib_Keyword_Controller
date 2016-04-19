@@ -2,7 +2,7 @@
   "name": "intraface/keyword-controller",
     "type": "library",
     "description": "",
-    "homepage": "https://github.com/intraface/Ilib_Variable",
+    "homepage": "https://github.com/intraface/Ilib_Keyword_Controller",
     "license": "MIT",
     "authors": [
         {
@@ -16,12 +16,7 @@
     ],
    "autoload": {
         "classmap": [
-            "3Party/src/"
-        ]
-    },
-    "autoload-dev": {
-        "classmap": [
-            "tests/"
+            "src/"
         ]
     },
     "require": {
